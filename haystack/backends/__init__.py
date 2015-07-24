@@ -443,6 +443,7 @@ class BaseSearchQuery(object):
     """
 
     def __init__(self, using=DEFAULT_ALIAS):
+        self.json_query = None
         self.query_filter = SearchNode()
         self.order_by = []
         self.models = set()
@@ -793,6 +794,10 @@ class BaseSearchQuery(object):
         if subtree:
             self.query_filter.end_subtree()
 
+    def set_json_query(self, dict_query):
+        """ sets the dict_query to the instance.json_query attribute """
+        self.json_query = dict_query
+
     def add_order_by(self, field):
         """Orders the search result by a field."""
         self.order_by.append(field)
@@ -996,6 +1001,7 @@ class BaseSearchQuery(object):
             klass = self.__class__
 
         clone = klass(using=using)
+        clone.json_query = self.json_query.copy() if self.json_query else None
         clone.query_filter = deepcopy(self.query_filter)
         clone.order_by = self.order_by[:]
         clone.models = self.models.copy()

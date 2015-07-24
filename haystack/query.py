@@ -292,6 +292,24 @@ class SearchQuerySet(object):
         else:
             return self.filter_and(*args, **kwargs)
 
+    def json_query(self, dict_query):
+        """  """
+        clone = self._clone()
+
+        # if dict_query:
+        #     results = clone.query.backend.search('nnn', json_query=dict_query)
+        #     clone.query._results = results.get('results', [])
+        #     clone.query._hit_count = results.get('hits', 0)
+        #     return clone.query.get_results()
+        # return []
+        # The commented code above works but just returns a list with the
+        # results, so using this set_json_query method allows returning a
+        # SearchQuerySet like the others methods :)
+
+        clone.query.set_json_query(dict_query)
+
+        return clone
+
     def exclude(self, *args, **kwargs):
         """Narrows the search by ensuring certain attributes are not included."""
         clone = self._clone()

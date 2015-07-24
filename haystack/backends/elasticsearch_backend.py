@@ -940,10 +940,15 @@ class ElasticsearchSearchQuery(BaseSearchQuery):
         if spelling_query:
             search_kwargs['spelling_query'] = spelling_query
 
+        # trying to add the json_query dict
+        if hasattr(self, 'json_query') and self.json_query:
+            search_kwargs['json_query'] = self.json_query
+
         return search_kwargs
 
     def run(self, spelling_query=None, **kwargs):
         """Builds and executes the query. Returns a list of search results."""
+        # json query now is here too
         final_query = self.build_query()
         search_kwargs = self.build_params(spelling_query, **kwargs)
         results = self.backend.search(final_query, **search_kwargs)
